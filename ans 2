@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Portfolio Management</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Stock Portfolio Management</h1>
+            <div id="balance" class="balance">Available Balance: $10,000.00</div>
+        </header>
+
+        <div class="stock-section">
+            <div class="stock-list">
+                <h2>Live Stock Prices</h2>
+                <div id="live-prices-list" class="card-list"></div>
+            </div>
+
+            <div class="portfolio">
+                <h2>Your Portfolio</h2>
+                <div id="portfolio-list" class="card-list"></div>
+            </div>
+        </div>
+        
+        <!-- Modal Trade Form -->
+        <div id="trade-form" class="trade-form hidden">
+            <button onclick="closeTradeForm()" class="close-btn">×</button>
+            <h3 id="trade-form-title">Trade Stocks</h3>
+            <div id="trade-form-content"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+//css
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body Styling */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Container Styling */
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+}
+
+/* Header Styling */
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    color: #0056b3;
+}
+
+.balance {
+    font-size: 1.2rem;
+    color: #28a745;
+    font-weight: bold;
+}
+
+/* Stock Section Styling */
+.stock-section {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.stock-list, .portfolio {
+    flex: 1;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.stock-list h2, .portfolio h2 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: #0056b3;
+}
+
+.card-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+}
+
+.card-list div {
+    background: #f9f9f9;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 0.9rem;
+    transition: transform 0.2s;
+}
+
+.card-list div:hover {
+    transform: scale(1.03);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Modal Trade Form */
+.trade-form {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+    z-index: 1000;
+    display: none;
+    width: 90%;
+    max-width: 500px;
+}
+
+.trade-form.hidden {
+    display: none;
+}
+
+.trade-form h3 {
+    margin-bottom: 15px;
+    color: #0056b3;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #dc3545;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .stock-section {
+        flex-direction: column;
+    }
+}
+//js
+// Dummy data for stocks, portfolio, and live prices
+const stockData = [
+    { symbol: "AAPL", price: 150.00 },
+    { symbol: "GOOGL", price: 2750.00 },
+    { symbol: "AMZN", price: 3400.00 },
+    { symbol: "MSFT", price: 300.00 },
+    { symbol: "TSLA", price: 700.00 }
+];
+
+let portfolio = {};
+let availableBalance = 10000.00;  // Default balance
+
+// Display available balance
+function updateBalance() {
+    document.getElementById('balance').textContent = `Available Balance: $${availableBalance.toFixed(2)}`;
+}
+
+// Display stock list
+function updateLivePrices() {
+    const livePricesList = document.getElementById('live-prices-list');
+    livePricesList.innerHTML = '';
+
+    stockData.forEach(stock => {
+        const stockPriceElement = document.createElement('div');
+        stockPriceElement.className = 'stock-price';
+        stockPriceElement.innerHTML = `
+            <h3>${stock.symbol}</h3>
+            <p>Price: $${stock.price.toFixed(2)}</p>
+            <button onclick="addToPortfolio('${stock.symbol}')">Buy</button>
+        `;
+        livePricesList.appendChild(stockPriceElement);
+    });
+}
+
+// Add stock to portfolio
+function addToPortfolio(stockSymbol) {
+    const amount = prompt(`How many shares of ${stockSymbol} do you want to buy?`);
+    const stock = stockData.find(s => s.symbol === stockSymbol);
+
+    if (stock && amount > 0 && availableBalance >= stock.price * amount) {
+        portfolio[stockSymbol] = portfolio[stockSymbol] || 0;
+        portfolio[stockSymbol] += parseInt(amount);
+        availableBalance -= stock.price * amount;
+        alert(`${amount} shares of ${stockSymbol} added to your portfolio.`);
+        updateBalance();
+        updatePortfolio();
+    } else {
+        alert('Insufficient balance or invalid amount.');
+    }
+}
+
+// Update portfolio display
+function updatePortfolio() {
+    const portfolioList = document.getElementById('portfolio-list');
+    portfolioList.innerHTML = '';
+
+    for (const symbol in portfolio) {
+        const stock = stockData.find(s => s.symbol === symbol);
+        const portfolioElement = document.createElement('div');
+        portfolioElement.className = 'stock';
+        portfolioElement.innerHTML = `
+            <h3>${symbol}</h3>
+            <p>Shares: ${portfolio[symbol]}</p>
+            <p>Price: $${stock.price.toFixed(2)}</p>
+            <button onclick="sellFromPortfolio('${symbol}')">Sell</button>
+        `;
+        portfolioList.appendChild(portfolioElement);
+    }
+}
+
+// Sell stock from portfolio
+function sellFromPortfolio(symbol) {
+    const amount = prompt(`How many shares of ${symbol} do you want to sell?`);
+    const stock = stockData.find(s => s.symbol === symbol);
+
+    if (portfolio[symbol] && amount > 0 && portfolio[symbol] >= amount) {
+        portfolio[symbol] -= parseInt(amount);
+        availableBalance += stock.price * amount;
+        alert(`${amount} shares of ${symbol} sold from your portfolio.`);
+        updateBalance();
+        updatePortfolio();
+    } else {
+        alert('You do not have enough shares or invalid amount.');
+    }
+}
+
+// Close Trade Form
+function closeTradeForm() {
+    document.getElementById('trade-form').style.display = 'none';
+}
+
+// Initialize
+updateLivePrices();
+updateBalance();
+updatePortfolio();
+
