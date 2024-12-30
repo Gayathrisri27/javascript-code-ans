@@ -1,0 +1,261 @@
+//html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoMob-Mechanic</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <nav>
+                <h1>AutoMob-Mechanic</h1>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#booking">Booking</a></li>
+                    <li><a href="#reports">Reports</a></li>
+                    <li><a href="#login">Login</a></li>
+                    <li><a href="#logout">Logout</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main>
+            <!-- Home Section -->
+            <section id="home" class="section">
+                <h2>Welcome to AutoMob-Mechanic</h2>
+                <p>Your one-stop solution for all automobile services and repairs. Schedule a service today and let us take care of the rest!</p>
+            </section>
+
+            <!-- Services Section -->
+            <section id="services" class="section">
+                <h2>Our Services</h2>
+                <div class="service-cards">
+                    <div class="card">
+                        <h3>Preventive Maintenance</h3>
+                        <p>Regular inspections to keep your car in top shape.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Body Repair</h3>
+                        <p>Accident repairs and painting services.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Car Care</h3>
+                        <p>Interior and exterior cleaning and detailing.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Booking Section -->
+            <section id="booking" class="section">
+                <h2>Book a Service</h2>
+                <form id="booking-form">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" required>
+
+                    <label for="date">Preferred Date:</label>
+                    <input type="date" id="date" required>
+
+                    <label for="service">Select Service:</label>
+                    <select id="service" required>
+                        <option value="preventive">Preventive Maintenance</option>
+                        <option value="body">Body Repair</option>
+                        <option value="car">Car Care</option>
+                    </select>
+
+                    <button type="submit">Submit</button>
+                </form>
+                <p id="booking-success" class="hidden">Thank you for booking! Our team will contact you shortly.</p>
+            </section>
+
+            <!-- Reports Section -->
+            <section id="reports" class="section">
+                <h2>Reports</h2>
+                <p>Booking information will be displayed here (to be dynamically loaded).</p>
+            </section>
+
+            <!-- Login Section -->
+            <section id="login" class="section">
+                <h2>Login</h2>
+                <form id="login-form">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" required>
+
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" required>
+
+                    <button type="submit">Login</button>
+                </form>
+                <p id="login-message"></p>
+            </section>
+
+            <!-- Logout Section -->
+            <section id="logout" class="section">
+                <h2>Logout</h2>
+                <p>You have successfully logged out.</p>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2024 AutoMob-Mechanic. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+//css
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body and Container */
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f8f9fa;
+}
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+}
+
+/* Header and Navigation */
+header {
+    background: #007bff;
+    color: white;
+    padding: 10px 0;
+    text-align: center;
+}
+
+nav h1 {
+    margin-bottom: 10px;
+    font-size: 2rem;
+}
+
+nav ul {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    gap: 15px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+nav ul li a:hover {
+    text-decoration: underline;
+}
+
+/* Sections */
+.section {
+    margin: 20px 0;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.section h2 {
+    color: #007bff;
+    margin-bottom: 15px;
+}
+
+/* Services */
+.service-cards {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.card {
+    flex: 1;
+    background: #f1f1f1;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Forms */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+form input, form select, form button {
+    padding: 10px;
+    font-size: 1rem;
+}
+
+form button {
+    background: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+form button:hover {
+    background: #0056b3;
+}
+
+/* Messages */
+.hidden {
+    display: none;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    margin-top: 20px;
+    color: #666;
+}
+//js
+// Booking Form
+const bookingForm = document.getElementById("booking-form");
+const bookingSuccess = document.getElementById("booking-success");
+
+bookingForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    bookingSuccess.classList.remove("hidden");
+    bookingForm.reset();
+});
+
+// Login Form
+const loginForm = document.getElementById("login-form");
+const loginMessage = document.getElementById("login-message");
+
+loginForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+
+    if (username === "admin" && password === "password") {
+        loginMessage.textContent = "Login successful!";
+        loginMessage.style.color = "green";
+    } else {
+        loginMessage.textContent = "Invalid username or password.";
+        loginMessage.style.color = "red";
+    }
+
+    loginForm.reset();
+});
